@@ -12,8 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CMDS=csi-attacher
-all: build
+.PHONY: attacher
+attacher:
+	mkdir -p bin
+	CGO_ENABLED=0 GOOS=linux go build -o bin/csi-attacher ./cmd/csi-attacher
 
-include release-tools/build.make
-
+.PHONY: image
+image: attacher
+	#docker build -t juicedata/juicefs-csi-attacher:v4.0.0 -f Dockerfile .
+	docker buildx build -t juicedata/juicefs-csi-attacher:v4.0.0 -f Dockerfile --platform linux/amd64,linux/arm64 . --push
