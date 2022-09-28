@@ -495,10 +495,12 @@ func (h *csiHandler) csiAttach(va *storage.VolumeAttachment) (*storage.VolumeAtt
 		return va, nil, err
 	}
 
-	nodeID, err := h.getNodeID(h.attacherName, va.Spec.NodeName, nil)
-	if err != nil {
-		return va, nil, err
-	}
+	//nodeID, err := h.getNodeID(h.attacherName, va.Spec.NodeName, nil)
+	//if err != nil {
+	//	return va, nil, err
+	//}
+	nodeID := va.Spec.NodeName
+	klog.V(4).Infof("Using node name to be node id %q", nodeID)
 
 	originalVA := va
 	va, finalizerAdded := h.prepareVAFinalizer(va)
